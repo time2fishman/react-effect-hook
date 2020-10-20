@@ -1,68 +1,162 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+[![General Assembly Logo](https://camo.githubusercontent.com/1a91b05b8f4d44b5bbfb83abac2b0996d8e26c92/687474703a2f2f692e696d6775722e636f6d2f6b6538555354712e706e67)](https://generalassemb.ly/education/web-development-immersive)
 
-## Available Scripts
+# React useEffect()
 
-In the project directory, you can run:
+So far, we've used react components to build simple applications. We've added state using the useState hook and passed down state to our children components as props. In order to do more complex things, we'll have to use life cycle methods.
 
-### `yarn start`
+## Prerequisites
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- React
+- Components
+- State and props
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+## Objectives
 
-### `yarn test`
+By the end of this, developers should be able to:
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Explain how to use useEffect()
+- Retrieve data from an API inside of a component
 
-### `yarn build`
+## Introduction
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+How do we get data from an API? Well we could drop in an AJAX call to fetch some
+data, but our component would likely render before the AJAX request finished.
+Our component would see that our data is `undefined` and either render a
+blank/empty component or throw an error.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+How do we incorporate third party libraries like `fetch` or `axios` with React?
+It sounds complicated... Do we put that in render?
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+This lesson will introduce the Component Life Cycle: hooks that are fired at
+different states of a components "life" for solving the problems described
+above, as well as many others.
 
-### `yarn eject`
+So, what is the Component Life Cycle?
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## The Component Life Cycle
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### The Life Cycle Methods (10 min / 0:20)
 
-### Code Splitting
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+When we create a react component we get a couple of lifecycle methods included
+that we can use to add functionality to our components. These methods are
+invoked at specific periods during the "life" of a component, like when it
+mounts to the DOM or unmounts from the DOM. While there are a lot of lifecycle
+methods, there are only a few that you will use regularly.
 
-### Analyzing the Bundle Size
+Here is a good diagram of the [Lifecycle Methods](https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/) for class components.
+We have been using functional components but it is good to get familiar with both.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+There are three types of component lifecycle methods:
 
-### Making a Progressive Web App
+**the useEffect() hook gets called inside of the functional component**
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+**Mounting:** called when a component is created and inserted into the DOM.
 
-### Advanced Configuration
+```js
+  {/* This only gets fired when this component is mounted */}
+  useEffect(() => {
+    console.log('I only get logged when this component mounts')
+  }, [])
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+```
 
-### Deployment
+**Updating:** usually triggered by changes in props or state.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+```js
+  {/* This will run upon component mounting and every change in state */}
+  useEffect(() => {
+    console.log('I get logged on mount and every time I hear state change')
+  })
 
-### `yarn build` fails to minify
+```
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+
+**Unmounting:** called when a component is being removed from the DOM.
+
+```js
+
+  useEffect(() => {
+
+    {/* This return will fire when the component gets unmounted*/}
+    return () => {
+      console.log('I get logged when this component unmounts')
+    }
+  })
+
+
+
+```
+
+# Making Fetch Requests to third party APIs
+
+## The Color API
+
+We can make fetch requests to this API at `http://www.thecolorapi.com/id?rgb=255,255,255`. There are many parameters
+we can use but for our purposes we will just be using the `rgb` parameter. It takes three values which are separated by commas.
+
+When our page loads, we can make a fetch request inside of the useEffect() hook:
+
+```js
+  import React, { useState, useEffect} from 'react'
+
+  function App(){
+    const [color, setColor] = useState()
+
+    const fetchColor = () => {
+        const r = Math.floor(Math.random() * 256)
+        const g = Math.floor(Math.random() * 256)
+        const b = Math.floor(Math.random() * 256)
+        fetch(`http://www.thecolorapi.com/id?rgb=${r},${g},${b}`)
+        .then(res => res.json())
+        .then(res => {
+            console.log(res)
+            setColor(res)
+        })
+    }
+
+    useEffect(() => {
+        fetchColor()
+    }, [])
+
+
+    return(
+      <div>
+        {color ? <img src={color.image.bare}/> : null}
+        <button onClick={fetchColor}>Get New Color</button>
+      </div>
+    )
+  }
+
+  export default App;
+
+```
+
+We can also make fetch call directly inside out useEffect() hook
+
+```js
+useEffect(() => {
+    const r = Math.floor(Math.random() * 256)
+    const g = Math.floor(Math.random() * 256)
+    const b = Math.floor(Math.random() * 256)
+    fetch(`http://www.thecolorapi.com/id?rgb=${r},${g},${b}`)
+      .then(res => res.json())
+      .then(res => {
+        console.log(res)
+        setColor(res)
+      })
+  }, [])
+
+
+```
+
+
+
+Review the documentation on
+[The Component Life Cycle](https://reactjs.org/docs/react-component.html#the-component-lifecycle).
+[The useEffect Hook](https://reactjs.org/docs/hooks-effect.html)
