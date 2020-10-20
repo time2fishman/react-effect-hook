@@ -40,7 +40,7 @@ So, what is the Component Life Cycle?
 
 
 
-### The Life Cycle Methods (10 min / 0:20)
+### The Life Cycle Methods
 
 
 When we create a react component we get a couple of lifecycle methods included
@@ -63,7 +63,6 @@ There are three types of component lifecycle methods:
   useEffect(() => {
     console.log('I only get logged when this component mounts')
   }, [])
-
 ```
 
 **Updating:** usually triggered by changes in props or state.
@@ -73,7 +72,6 @@ There are three types of component lifecycle methods:
   useEffect(() => {
     console.log('I get logged on mount and every time I hear state change')
   })
-
 ```
 
 
@@ -88,9 +86,6 @@ There are three types of component lifecycle methods:
       console.log('I get logged when this component unmounts')
     }
   })
-
-
-
 ```
 
 # Making Fetch Requests to third party APIs
