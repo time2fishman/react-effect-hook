@@ -95,7 +95,7 @@ There are three types of component lifecycle methods:
 We can make fetch requests to this API at `http://www.thecolorapi.com/id?rgb=255,255,255`. There are many parameters
 we can use but for our purposes we will just be using the `rgb` parameter. It takes three values which are separated by commas.
 
-When our page loads, we can make a fetch request inside of the useEffect() hook:
+When our page loads, we can call a function that makes a fetch call to the color API inside of our useEffect function:
 
 ```js
   import React, { useState, useEffect} from 'react'
@@ -132,7 +132,7 @@ When our page loads, we can make a fetch request inside of the useEffect() hook:
 
 ```
 
-We can also make fetch call directly inside out useEffect() hook
+We can also make fetch calls directly inside out useEffect() function
 
 ```js
 useEffect(() => {
