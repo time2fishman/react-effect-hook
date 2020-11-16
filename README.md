@@ -132,7 +132,7 @@ When our page loads, we can call a function that makes a fetch call to the color
 
 ```
 
-We can also make fetch calls directly inside out useEffect() function
+We can also make fetch calls directly inside our useEffect() function
 
 ```js
 useEffect(() => {
